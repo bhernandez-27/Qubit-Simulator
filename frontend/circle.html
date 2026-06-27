@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloch Sphere</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+</head>
+<body>
+    <input type="range" id="spikeySlider" min="1" max="400" value="13" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+
+    <script>
+        function makeAxis(start, end, color) {
+            const points = [start, end];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: color });
+            return new THREE.Line(geometry, material);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+
+        //control how the sphere looks 
+        spikeyness = 13; // higher value = smoother sphere, lower value = more spiky
+
+        //make the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        //make the sphere
+        const geometry = new THREE.SphereGeometry(2.5, spikeyness, spikeyness);
+        const material = new THREE.MeshBasicMaterial({ color: 0x552f70, wireframe: true });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+
+        //position the camera a little bit away from the sphere
+        camera.position.z = 0;
+        camera.position.y = 0;
+        camera.position.x = -10;
+        camera.lookAt(sphere.position);
+
+        //axes
+        const xAxis = makeAxis(new THREE.Vector3(-3.5, 0, 0), new THREE.Vector3(3.5, 0, 0), 0xff0000); // red
+        const yAxis = makeAxis(new THREE.Vector3(0, -3.5, 0), new THREE.Vector3(0, 3.5, 0), 0x0000ff); // blue
+        const zAxis = makeAxis(new THREE.Vector3(0, 0, -3.5), new THREE.Vector3(0, 0, 3.5), 0x00ff00); // green
+
+        scene.add(xAxis);
+        scene.add(yAxis);
+        scene.add(zAxis);
+
+       /*//test dot
+        const dotGeometry = new THREE.SphereGeometry(0.08, 16, 16);
+        const dotMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const dot = new THREE.Mesh(dotGeometry, dotMaterial);
+
+        dot.position.set(0, 2.5, 0); // example: north pole of your sphere (radius 2.5)
+        scene.add(dot);*/
+
+        //render labels
+        const labelRenderer = new THREE.CSS2DRenderer();
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0px';
+        labelRenderer.domElement.style.pointerEvents = 'none';
+        document.body.appendChild(labelRenderer.domElement);
+
+        const ket_zero_label_div = document.createElement('div');
+        ket_zero_label_div.textContent = '|0⟩';
+        ket_zero_label_div.style.color = 'white';
+        ket_zero_label_div.style.fontSize = '25px';
+        const ket_zero_label = new THREE.CSS2DObject(ket_zero_label_div);
+        ket_zero_label.position.set(0, 3, 0); // slightly past the dot
+        scene.add(ket_zero_label);
+
+        const ket_one_label_div = document.createElement('div');
+        ket_one_label_div.textContent = '|1⟩';
+        ket_one_label_div.style.color = 'white';
+        ket_one_label_div.style.fontSize = '25px';
+        const ket_one_label = new THREE.CSS2DObject(ket_one_label_div);
+        ket_one_label.position.set(0, -3, 0); // slightly past the dot
+        scene.add(ket_one_label);
+
+        const plus_state_label_div = document.createElement('div');
+        plus_state_label_div.textContent = '|-⟩';
+        plus_state_label_div.style.color = 'white';
+        plus_state_label_div.style.fontSize = '25px';
+        const plus_state_label = new THREE.CSS2DObject(plus_state_label_div);
+        plus_state_label.position.set(3, 0, 0); // slightly past the dot
+        scene.add(plus_state_label);
+
+
+        const minus_state_label_div = document.createElement('div');
+        minus_state_label_div.textContent = '|+⟩';
+        minus_state_label_div.style.color = 'white';
+        minus_state_label_div.style.fontSize = '25px';
+        const minus_state_label = new THREE.CSS2DObject(minus_state_label_div);
+        minus_state_label.position.set(-3, 0, 0); // slightly past the dot
+        scene.add(minus_state_label);
+
+
+        const right_state_label_div = document.createElement('div');
+        right_state_label_div.textContent = '|L⟩';
+        right_state_label_div.style.color = 'white';
+        right_state_label_div.style.fontSize = '25px';
+        const right_state_label = new THREE.CSS2DObject(right_state_label_div);
+        right_state_label.position.set(0, 0, 3); // slightly past the dot
+        scene.add(right_state_label);
+
+
+        const left_state_label_div = document.createElement('div');
+        left_state_label_div.textContent = '|R⟩';
+        left_state_label_div.style.color = 'white';
+        left_state_label_div.style.fontSize = '25px';
+        const left_state_label = new THREE.CSS2DObject(left_state_label_div);
+        left_state_label.position.set(0, 0, -3); // slightly past the dot
+        scene.add(left_state_label);
+
+
+
+
+        //allow user to rotate camera around sphere
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        const slider = document.getElementById('spikeySlider');
+        slider.addEventListener('input', function() {
+            const newSpikeyness = parseInt(slider.value);
+            sphere.geometry.dispose(); // free the old geometry's memory
+            sphere.geometry = new THREE.SphereGeometry(2.5, newSpikeyness, newSpikeyness);
+        });
+
+        renderer.render(scene, camera);
+
+        animate();
+
+        
+    </script>
+
+</body>
+</html>
