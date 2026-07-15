@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1782355217.94404 "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" "journey.pdf" "journey" 1782355218.17251 0
-  "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" 1782355217.78643 991 444681dfaa54f1de74115aeb214f143f ""
+["pdflatex"] 1784080507.19414 "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" "journey.pdf" "journey" 1784080507.43436 0
+  "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" 1784080506.73357 2288 a1f808aeb930584cb58ec1113bb450a9 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -16,9 +16,15 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb" 1248133631 37912 77d683123f92148345f3fc36a38d9ab1 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1248133631 36281 c355509802a035cadc5f15869451dcee ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1248133631 32362 179c33bbf43f19adbb3825bb4e36e57a ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1248133631 31809 8670ca339bf94e56da1fc21c80635e2a ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls" 1748806692 20144 b966087dda3b194755eb460d32e2ef75 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo" 1748806692 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1761248321 30662 bfd6e864f4ffc5018b0e2b6260c3181c ""
@@ -26,8 +32,8 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1781735401 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "journey.aux" 1782355218.15271 228 d549f566812b07d8240c92fb3382e86b "pdflatex"
-  "journey.tex" 1782355217.78643 991 444681dfaa54f1de74115aeb214f143f ""
+  "journey.aux" 1784080507.41108 363 78b0435f3c9fbc5bd850207b1d62bc04 "pdflatex"
+  "journey.tex" 1784080506.73357 2288 a1f808aeb930584cb58ec1113bb450a9 ""
   (generated)
   "journey.aux"
   "journey.log"

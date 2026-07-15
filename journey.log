@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  24 JUN 2026 22:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 JUL 2026 21:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -49,27 +49,36 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 11.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 11.
- [1
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 27.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 27.
 
-{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./journey.aux)
+Underfull \hbox (badness 10000) in paragraph at lines 27--37
+
+ []
+
+[1
+
+{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] (./journey.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 457 strings out of 467525
- 8491 string characters out of 5418982
- 436756 words of memory out of 5000000
- 29437 multiletter control sequences out of 15000+600000
- 631669 words of font info for 53 fonts, out of 8000000 for 9000
+ 460 strings out of 467525
+ 8534 string characters out of 5418982
+ 441756 words of memory out of 5000000
+ 29440 multiletter control sequences out of 15000+600000
+ 631976 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,6n,38p,389b,199s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on journey.pdf (1 page, 65581 bytes).
+ 35i,6n,38p,465b,199s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on journey.pdf (2 pages, 122687 bytes).
 PDF statistics:
- 33 PDF objects out of 1000 (max. 8388607)
- 19 compressed objects within 1 object stream
+ 66 PDF objects out of 1000 (max. 8388607)
+ 39 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

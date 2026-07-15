@@ -19,5 +19,20 @@ This document chronicles my journey in creating \textbf{A Trip on The Bloch Sphe
 Since finding the probability amplitudes of a qubit without explicit calculation is impossible, it is necessary to use matrix multiplication to find the state after each operation applied. While I could use Python or a library that already implements matrix multiplication, what's the fun in that?\newline{}
 So the first step is to make a library that implements matrix multiplication, and what better language to do it in than C? It's fast, simple, and straightforward. It has all I need: no more, no less.
 \\
-The first step is to use a struct to implement complex numbers. 
+The first step is to use a struct to implement complex numbers. It simply has to have a real part and imaginary part.
+\\
+Now for the 
+
+\subsection{Converting Vector to Spherical Coordinates}
+We can represent any qubit on the Bloch Sphere using the spherical coordinates $(\theta ,\phi , r)$. Since $\vert \alpha^2 \vert + \vert \beta^2 \vert = 1$, r is always 1 and so for any pure state qubit, the resulting coordinate will always be on the surface of the Bloch Sphere.
+\\
+Any qubit can be represented in the following form: $\cos(\frac{\theta}{2}) \vert 0 \rangle + e^{i\phi} \sin(\frac{\theta}{2}) \vert 1 \rangle$, where $\phi$ is the relative phase between $\vert 0 \rangle$ and $\vert 1 \rangle$. $\theta$ will be limited to values between $0$ and $\pi$, so the fact that cos is a symetric function does not matter: the negative value of $\theta$ can always be rejected.
+\\
+Now that we know the value of $\theta$, we can plug it into $e^{i\phi} \sin(\frac{\theta}{2}) = \beta$ to solve for the only unkown variable: $\phi$.
+\\
+Solving this gives us: $\phi = -i \cdot \ln(\frac{\beta}{\sin(\frac{\theta}{2})})$, where we use $-i$ as the inverse of $i$, and use $\phi = 0$ if $\theta$ = 0.
+\\
+\\
+Now going back to the part about $\phi$ being the relative phase, we can easily make sure this assumption always holds true by factoring out any complex number 
+
 \end{document}
