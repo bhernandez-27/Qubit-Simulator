@@ -1,4 +1,6 @@
-class ComplexNumber 
+import { findTheta, findRelativePhase } from "../complex_valued_trig/qubit_phase_calculations";
+
+export class ComplexNumber 
 {
     realPart : number;
     imaginaryPart : number;
@@ -10,15 +12,11 @@ class ComplexNumber
     }
 }
 
-interface Vector
-{
-    complexNumbers : ComplexNumber[];
-    length : number;
-
+export interface AmplitudeVector {
     [index: number]: ComplexNumber;
 }
 
-class Vector 
+export class AmplitudeVector
 {
     complexNumbers : ComplexNumber[];
     length : number;
@@ -45,7 +43,7 @@ class Vector
     
 }
 
-class Bra extends Vector 
+export class Bra extends AmplitudeVector 
 {
     constructor(complexNumbers: ComplexNumber[])
     {
@@ -53,7 +51,7 @@ class Bra extends Vector
     }
 }
 
-class Ket extends Vector 
+export class Ket extends AmplitudeVector 
 {
     constructor(complexNumbers: ComplexNumber[])
     {
@@ -61,18 +59,27 @@ class Ket extends Vector
     }
 }
 
-class BraQubit extends Ket
+
+class BraQubit extends Bra
 {
+    theta : number;
+    phi : number; 
     constructor(alpha : ComplexNumber, beta : ComplexNumber)
     {
         super([alpha,beta]);
+        this.theta = findTheta(alpha);
+        this.phi = findRelativePhase(alpha, beta);
     }
 }
 
-class KetQubit extends Ket
+class KetQubit extends Ket 
 {
+    theta : number;
+    phi : number;
     constructor(alpha : ComplexNumber, beta : ComplexNumber)
     {
-        super([alpha, beta]);
+        super([alpha,beta]);
+        this.theta = findTheta(alpha);
+        this.phi = findRelativePhase(alpha, beta);
     }
 }
