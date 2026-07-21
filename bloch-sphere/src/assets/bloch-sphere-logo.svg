@@ -1,0 +1,59 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#2a1a3a"/>
+      <stop offset="100%" stop-color="#131018"/>
+    </radialGradient>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a685c9"/>
+      <stop offset="100%" stop-color="#6b3f9e"/>
+    </linearGradient>
+    <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#e8d9ff"/>
+      <stop offset="100%" stop-color="#e8d9ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="800" height="800" fill="url(#bgGlow)"/>
+
+  <!-- wireframe sphere: latitude ellipses -->
+  <g fill="none" stroke="url(#wireGrad)" stroke-width="1.4" opacity="0.85">
+    <ellipse cx="400" cy="400" rx="220" ry="220"/>
+    <ellipse cx="400" cy="400" rx="220" ry="70"/>
+    <ellipse cx="400" cy="400" rx="220" ry="150"/>
+    <ellipse cx="400" cy="330" rx="170" ry="34"/>
+    <ellipse cx="400" cy="470" rx="170" ry="34"/>
+    <ellipse cx="400" cy="270" rx="110" ry="16"/>
+    <ellipse cx="400" cy="530" rx="110" ry="16"/>
+    <!-- longitude ellipses -->
+    <ellipse cx="400" cy="400" rx="70" ry="220"/>
+    <ellipse cx="400" cy="400" rx="150" ry="220"/>
+    <ellipse cx="400" cy="400" rx="34" ry="220" transform="rotate(30 400 400)"/>
+    <ellipse cx="400" cy="400" rx="34" ry="220" transform="rotate(-30 400 400)"/>
+  </g>
+
+  <!-- axes -->
+  <!-- z (green, vertical) -->
+  <line x1="400" y1="130" x2="400" y2="670" stroke="#4ee08a" stroke-width="2.2"/>
+  <!-- x (red, diagonal down-right) -->
+  <line x1="185" y1="510" x2="640" y2="290" stroke="#e0524e" stroke-width="2.2"/>
+  <!-- y (blue, diagonal shallow) -->
+  <line x1="150" y1="430" x2="650" y2="370" stroke="#4e7fe0" stroke-width="2.2"/>
+
+  <!-- state vector arrow -->
+  <line x1="400" y1="400" x2="540" y2="290" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <polygon points="540,290 516,296 528,314" fill="#ffffff"/>
+
+  <!-- glowing state point -->
+  <circle cx="540" cy="290" r="26" fill="url(#dotGlow)"/>
+  <circle cx="540" cy="290" r="7" fill="#ffffff"/>
+
+  <!-- pole labels, minimal -->
+  <text x="400" y="112" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#f2eefb">|0⟩</text>
+  <text x="400" y="712" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#f2eefb">|1⟩</text>
+
+  <!-- wordmark -->
+  <text x="400" y="770" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" letter-spacing="4" fill="#f5f2fb" font-weight="600">BLOCH</text>
+</svg>

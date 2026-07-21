@@ -1,0 +1,38 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#2a1a3a"/>
+      <stop offset="100%" stop-color="#131018"/>
+    </radialGradient>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b190d4"/>
+      <stop offset="100%" stop-color="#6b3f9e"/>
+    </linearGradient>
+    <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#e8d9ff"/>
+      <stop offset="100%" stop-color="#e8d9ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="48" fill="url(#bgGlow)"/>
+
+  <!-- wireframe sphere, simplified: fewer lines, bolder strokes for small-size legibility -->
+  <g fill="none" stroke="url(#wireGrad)" stroke-width="3.2" opacity="0.9">
+    <ellipse cx="128" cy="128" rx="76" ry="76"/>
+    <ellipse cx="128" cy="128" rx="76" ry="24"/>
+    <ellipse cx="128" cy="128" rx="24" ry="76"/>
+  </g>
+
+  <!-- axes, bold -->
+  <line x1="128" y1="44" x2="128" y2="212" stroke="#4ee08a" stroke-width="4"/>
+  <line x1="58" y1="164" x2="205" y2="94" stroke="#e0524e" stroke-width="4"/>
+  <line x1="46" y1="138" x2="212" y2="120" stroke="#4e7fe0" stroke-width="4"/>
+
+  <!-- state vector -->
+  <line x1="128" y1="128" x2="180" y2="90" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  <polygon points="180,90 162,94 170,110" fill="#ffffff"/>
+
+  <circle cx="180" cy="90" r="16" fill="url(#dotGlow)"/>
+  <circle cx="180" cy="90" r="6" fill="#ffffff"/>
+</svg>
