@@ -3,6 +3,8 @@ import { makeAxesLabel } from "./axes";
 import { parseComplexNumberFromString } from "./input_parsing";
 import { type Qubit, KetQubit } from "../math/linear_algebra/components";
 import { convertPureStateToCartesian } from "../math/complex_valued_trig/plotting_calculations";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+
 
 export function plotPoint(
     coordinates : THREE.Vector3,
@@ -26,24 +28,24 @@ export function plotPsi
     radius: number = 0.04,
     color: number = 0xd7e05a,
     labelOffset: number = 0.15 // how far the label sits away from the point
-): THREE.Mesh
+): { point : THREE.Mesh, label : CSS2DObject }
 {
-    const point = plotPoint(coordinates, parent, radius, color); // capture the return value — this was missing
+    const point = plotPoint(coordinates, parent, radius, color); // capture the return value 
 
     // offset the label slightly so it doesn't sit directly on top of the point
     const labelPosition = new THREE.Vector3(coordinates.x, coordinates.y + labelOffset, coordinates.z);
-    makeAxesLabel("|ψ⟩", labelPosition, parent);
+    const label = makeAxesLabel("|ψ⟩", labelPosition, parent);
 
-    return point;
+    return {point, label};
 }
 
-export function plotQubit(qubit : Qubit, parent : THREE.Object3D) : THREE.Mesh
+export function plotQubit(qubit : Qubit, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
 {
     const coordinates = convertPureStateToCartesian(qubit);
     return plotPsi(coordinates, parent);
 }
 
-export function plotFromAmplitudeInputs(alphaString : string, betaString : string, parent : THREE.Object3D) : THREE.Mesh
+export function plotFromAmplitudeInputs(alphaString : string, betaString : string, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
 {
     const alpha = parseComplexNumberFromString(alphaString);
     const beta = parseComplexNumberFromString(betaString);

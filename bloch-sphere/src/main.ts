@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { makeAxesLabel, makeDoubleAxisArrow } from "./scene/axes";
-import { plotFromAmplitudeInputs} from "./scene/plotting";
-import { parseComplexNumberFromString } from "./scene/input_parsing"; 
+import { plotFromAmplitudeInputs, plotPsi} from "./scene/plotting";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 
 
 let sphereSegments = 13;
@@ -79,14 +79,6 @@ slider.addEventListener("input", () => {
 blochGroup.scale.set(visualRadius, visualRadius, visualRadius);
 scene.add(blochGroup);
 
-window.addEventListener("resize", () => {
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setSize(width, height);
-  labelRenderer.setSize(width, height);
-});
 
 //inputs for plotting
 const alphaInput = document.getElementById("alphaInput") as HTMLInputElement;
@@ -94,16 +86,111 @@ const betaInput = document.getElementById("betaInput") as HTMLInputElement;
 
 const plotButton = document.getElementById("plotButton") as HTMLButtonElement;
 
-let currentQubit: THREE.Mesh | undefined = undefined;
+let currentQubitPoint: { point: THREE.Mesh; label: CSS2DObject } | undefined = undefined;
 
 plotButton.addEventListener("click", () =>
 {
-    if(currentQubit)
+    if(currentQubitPoint)
     {
-        blochGroup.remove(currentQubit); // remove old qubit plot
+        blochGroup.remove(currentQubitPoint.point); // remove old qubit plot
+        blochGroup.remove(currentQubitPoint.label); // remove old qubit label
     }
-    currentQubit = plotFromAmplitudeInputs(alphaInput.value, betaInput.value, blochGroup);
+    currentQubitPoint = plotFromAmplitudeInputs(alphaInput.value, betaInput.value, blochGroup);
 }
 )
 
+//handle click inputs
+let isDragging = false;
 
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function updateMouseFromEvent(event: MouseEvent) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+}
+
+// 1. Start dragging — only if the click actually hit the existing point (or the sphere)
+renderer.domElement.addEventListener("pointerdown", (event) => {
+  updateMouseFromEvent(event);
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObject(sphere);
+  if (intersects.length > 0) {
+    isDragging = true;
+    controls.enabled = false; // disable OrbitControls while dragging the point, so they don't fight each other
+    if(currentQubitPoint)
+    {
+        blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
+        blochGroup.remove(currentQubitPoint.point); // remove old qubit plot
+    }
+    const localPoint = blochGroup.worldToLocal(intersects[0].point.clone());
+    currentQubitPoint = plotPsi(localPoint, blochGroup);
+  }
+});
+
+// 2. While dragging — continuously raycast and reposition
+renderer.domElement.addEventListener("pointermove", (event) => {
+  if (!isDragging) return;
+
+  updateMouseFromEvent(event);
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObject(sphere);
+  if (intersects.length > 0) {
+    const localPoint = blochGroup.worldToLocal(intersects[0].point.clone());
+
+    if (currentQubitPoint) {
+      blochGroup.remove(currentQubitPoint.point); // remove old point/label before redrawing
+      blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
+    }
+    currentQubitPoint = plotPsi(localPoint, blochGroup);
+  }
+});
+
+// 3. Stop dragging
+renderer.domElement.addEventListener("pointerup", () => {
+  isDragging = false;
+  controls.enabled = true; // re-enable camera controls
+});
+
+// also stop if the mouse leaves the canvas entirely, to avoid a "stuck" drag state
+renderer.domElement.addEventListener("pointerleave", () => {
+  isDragging = false;
+  controls.enabled = true;
+});
+
+
+//resizing
+const handle = document.getElementById("resizeHandle")!;
+const nav = document.getElementById("leftHandNavigation") as HTMLDivElement;
+let isResizing = false;
+
+handle.addEventListener("pointerdown", () => {
+  isResizing = true;
+});
+
+window.addEventListener("pointermove", (event) => {
+  if (!isResizing) return;
+  nav.style.width = `${event.clientX}px`; // set width directly based on mouse X position
+});
+
+window.addEventListener("pointerup", () => {
+  isResizing = false;
+});
+
+function updateRendererSize() {
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  labelRenderer.setSize(width, height);
+}
+
+const resizeObserver = new ResizeObserver(() => {
+  updateRendererSize();
+});
+resizeObserver.observe(container); // ✅ call ONCE, right after creating it
