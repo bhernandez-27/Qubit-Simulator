@@ -65,7 +65,7 @@ export interface Qubit
     phi : number; 
 }
 
-class BraQubit extends Bra implements Qubit
+export class BraQubit extends Bra implements Qubit
 {
     theta : number;
     phi : number; 

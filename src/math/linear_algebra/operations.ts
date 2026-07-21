@@ -1,8 +1,8 @@
 import { Bra, Ket } from "./components";
 
-function conjugateTranspose(bra: Bra) : Ket;
-function conjugateTranspose(ket: Ket) : Bra;
-function conjugateTranspose(input_vector: Bra | Ket) : Bra | Ket 
+export function conjugateTranspose(bra: Bra) : Ket;
+export function conjugateTranspose(ket: Ket) : Bra;
+export function conjugateTranspose(input_vector: Bra | Ket) : Bra | Ket 
 {
     let complexNumbers = [];
     for (let i = 0; i < input_vector.length; i++)
