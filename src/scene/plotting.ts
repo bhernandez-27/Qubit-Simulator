@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import { makeAxesLabel } from "./axes";
 import { parseComplexNumberFromString } from "./input_parsing";
-import { type Qubit, KetQubit } from "../math/linear_algebra/components";
+import { KetQubit } from "../math/linear_algebra/components";
 import { convertPureStateToCartesian } from "../math/complex_valued_trig/plotting_calculations";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-
+import round from "../math/basic_math/round"
 
 export function plotPoint(
     coordinates : THREE.Vector3,
@@ -39,7 +39,7 @@ export function plotPsi
     return {point, label};
 }
 
-export function plotQubit(qubit : Qubit, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
+export function plotQubit(qubit : KetQubit, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
 {
     const coordinates = convertPureStateToCartesian(qubit);
     return plotPsi(coordinates, parent);

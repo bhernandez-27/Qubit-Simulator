@@ -2,9 +2,12 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { makeAxesLabel, makeDoubleAxisArrow } from "./scene/axes";
-import { plotFromAmplitudeInputs, plotPsi} from "./scene/plotting";
+import { plotFromAmplitudeInputs, plotPsi } from "./scene/plotting";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-
+import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations"
+import { KetQubit, ComplexNumber, type Qubit } from "./math/linear_algebra/components"
+import { parseComplexNumberFromString } from "./scene/input_parsing"
+import round from "./math/basic_math/round"
 
 let sphereSegments = 13;
 
@@ -87,6 +90,7 @@ const betaInput = document.getElementById("betaInput") as HTMLInputElement;
 const plotButton = document.getElementById("plotButton") as HTMLButtonElement;
 
 let currentQubitPoint: { point: THREE.Mesh; label: CSS2DObject } | undefined = undefined;
+let currentQubit = new KetQubit(new ComplexNumber(1, 0), new ComplexNumber(0,0)); //default to |0> state
 
 plotButton.addEventListener("click", () =>
 {
@@ -96,6 +100,7 @@ plotButton.addEventListener("click", () =>
         blochGroup.remove(currentQubitPoint.label); // remove old qubit label
     }
     currentQubitPoint = plotFromAmplitudeInputs(alphaInput.value, betaInput.value, blochGroup);
+    currentQubit.update(parseComplexNumberFromString(alphaInput.value), parseComplexNumberFromString(betaInput.value));
 }
 )
 
@@ -110,6 +115,14 @@ function updateMouseFromEvent(event: MouseEvent) {
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 }
+
+function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : HTMLInputElement, betaInput : HTMLInputElement) 
+{
+  let roundedTo = 5;
+  alphaInput.value = String(round(qubit.complexNumbers[0].realPart, roundedTo)) + " + " + String(round(qubit.complexNumbers[0].imaginaryPart, roundedTo)) + "i";
+  betaInput.value = String(round(qubit.complexNumbers[1].realPart, roundedTo)) + " + " + String(round(qubit.complexNumbers[1].imaginaryPart, roundedTo)) + "i";
+}
+
 
 // 1. Start dragging — only if the click actually hit the existing point (or the sphere)
 renderer.domElement.addEventListener("pointerdown", (event) => {
@@ -127,6 +140,8 @@ renderer.domElement.addEventListener("pointerdown", (event) => {
     }
     const localPoint = blochGroup.worldToLocal(intersects[0].point.clone());
     currentQubitPoint = plotPsi(localPoint, blochGroup);
+    currentQubit = convertCartesianToPureState(localPoint);
+    outputAmplitudesFromQubit(currentQubit, alphaInput, betaInput);
   }
 });
 
@@ -146,6 +161,8 @@ renderer.domElement.addEventListener("pointermove", (event) => {
       blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
     }
     currentQubitPoint = plotPsi(localPoint, blochGroup);
+    currentQubit = convertCartesianToPureState(localPoint);
+    outputAmplitudesFromQubit(currentQubit, alphaInput, betaInput);
   }
 });
 
@@ -188,9 +205,18 @@ function updateRendererSize() {
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
   labelRenderer.setSize(width, height);
+
+  const scale = 1200 / width;
+
+  for (const input of [alphaInput, betaInput]) {
+    input.style.width = `${150 * scale}px`;
+    input.style.height = `${40 * scale}px`;
+    input.style.fontSize = `${16 * scale}px`;
+  }
 }
+
 
 const resizeObserver = new ResizeObserver(() => {
   updateRendererSize();
 });
-resizeObserver.observe(container); // ✅ call ONCE, right after creating it
+resizeObserver.observe(container);

@@ -61,6 +61,8 @@ export class Ket extends AmplitudeVector
 
 export interface Qubit
 {
+    complexNumbers : ComplexNumber[];
+    length : number;
     theta : number;
     phi : number; 
 }
@@ -100,4 +102,25 @@ export class KetQubit extends Ket implements Qubit
         this.phi = findRelativePhase(alpha, beta);
         this.complexNumbers = [alpha,beta];
     }
+}
+
+function complexMultiply(num1 : ComplexNumber, num2 : ComplexNumber) : ComplexNumber
+{
+    //(a+bi)(c+di) = ac + adi + bci -bd
+    return new ComplexNumber((num1.realPart * num2.realPart) - (num1.imaginaryPart * num2.imaginaryPart), (num1.realPart * num2.imaginaryPart) + (num1.imaginaryPart * num2.realPart));
+}
+
+export function makeQubitFromSpherical(theta : number, phi : number) : KetQubit
+{
+    //A qubit has the form cos(theta/2)|0> + e^i*phi * sin(theta/2)|1>
+    //e^i * phi = cos(phi) + i * sin(phi)
+    let alphaReal : number = Math.cos(theta/2);
+    let alpha : ComplexNumber = new ComplexNumber(alphaReal, 0);
+
+    let eIPhi : ComplexNumber = new ComplexNumber(Math.cos(phi), Math.sin(phi));
+    let sinPart : ComplexNumber = new ComplexNumber(Math.sin(theta/2), 0);
+
+    let beta = complexMultiply(eIPhi, sinPart);
+
+    return new KetQubit(alpha, beta);
 }
