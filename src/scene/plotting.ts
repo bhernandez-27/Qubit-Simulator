@@ -4,7 +4,6 @@ import { parseComplexNumberFromString } from "./input_parsing";
 import { KetQubit } from "../math/linear_algebra/components";
 import { convertPureStateToCartesian } from "../math/complex_valued_trig/plotting_calculations";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-import round from "../math/basic_math/round"
 
 export function plotPoint(
     coordinates : THREE.Vector3,
