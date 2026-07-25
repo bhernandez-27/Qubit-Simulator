@@ -119,8 +119,49 @@ function updateMouseFromEvent(event: MouseEvent) {
 function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : HTMLInputElement, betaInput : HTMLInputElement) 
 {
   let roundedTo = 5;
-  alphaInput.value = String(round(qubit.complexNumbers[0].realPart, roundedTo)) + " + " + String(round(qubit.complexNumbers[0].imaginaryPart, roundedTo)) + "i";
-  betaInput.value = String(round(qubit.complexNumbers[1].realPart, roundedTo)) + " + " + String(round(qubit.complexNumbers[1].imaginaryPart, roundedTo)) + "i";
+  let alphaReal : string = String(round(qubit.complexNumbers[0].realPart, roundedTo));
+  let alphaImaginary : string = String(round(qubit.complexNumbers[0].imaginaryPart, roundedTo));
+  let betaReal : string = String(round(qubit.complexNumbers[1].realPart, roundedTo));
+  let betaImaginary : string = String(round(qubit.complexNumbers[1].imaginaryPart, roundedTo));
+  
+  if(qubit.complexNumbers[0].imaginaryPart >= 0)
+  {
+    alphaInput.value = alphaReal + " + " + alphaImaginary +"i"
+  }
+  else
+  {
+    alphaInput.value = alphaReal + " - " + alphaImaginary.slice(1) +"i"
+  }
+
+  if(qubit.complexNumbers[1].imaginaryPart >= 0)
+  {
+    betaInput.value = betaReal + " + " + betaImaginary +"i"
+  }
+  else
+  {
+    betaInput.value = betaReal + " - " + betaImaginary.slice(1) +"i"
+  }
+
+
+  if(alphaReal == "0")
+  {
+    alphaInput.value = alphaImaginary  + "i";
+  }
+  
+  if(alphaImaginary == "0")
+  {
+    alphaInput.value = alphaReal;
+  }
+  
+  if(betaReal == "0")
+  {
+    betaInput.value =  betaImaginary + "i";
+  }
+  
+  if(betaImaginary == "0")
+  {
+    betaInput.value =  betaReal;
+  } 
 }
 
 
