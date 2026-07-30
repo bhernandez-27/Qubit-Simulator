@@ -4,10 +4,24 @@ import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { makeAxesLabel, makeDoubleAxisArrow } from "./scene/axes";
 import { plotFromAmplitudeInputs, plotPsi } from "./scene/plotting";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations"
-import { KetQubit, ComplexNumber, type Qubit } from "./math/linear_algebra/components"
-import { parseComplexNumberFromString } from "./scene/input_parsing"
-import round from "./math/basic_math/round"
+import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations";
+import { KetQubit, ComplexNumber, type Qubit } from "./math/linear_algebra/components";
+import round from "./math/basic_math/round";
+import { MathfieldElement } from "mathlive";
+import { parseComplexNumberFromMathInput } from "./scene/input_parsing";
+
+
+MathfieldElement.fontsDirectory = "/fonts"; // MUST run before any math-field connects
+
+const alphaInput = new MathfieldElement();
+alphaInput.id = "alphaInput";
+alphaInput.value = "\\frac{1}{\\sqrt{2}}";
+document.getElementById("alphaInputContainer")!.appendChild(alphaInput);
+
+const betaInput = new MathfieldElement();
+betaInput.id = "betaInput";
+betaInput.value = "\\frac{1}{\\sqrt{2}}";
+document.getElementById("betaInputContainer")!.appendChild(betaInput);
 
 let sphereSegments = 13;
 
@@ -84,25 +98,24 @@ scene.add(blochGroup);
 
 
 //inputs for plotting
-const alphaInput = document.getElementById("alphaInput") as HTMLInputElement;
-const betaInput = document.getElementById("betaInput") as HTMLInputElement;
-
 const plotButton = document.getElementById("plotButton") as HTMLButtonElement;
 
 let currentQubitPoint: { point: THREE.Mesh; label: CSS2DObject } | undefined = undefined;
 let currentQubit = new KetQubit(new ComplexNumber(1, 0), new ComplexNumber(0,0)); //default to |0> state
 
+
+//interpretting math input
 plotButton.addEventListener("click", () =>
 {
-    if(currentQubitPoint)
-    {
-        blochGroup.remove(currentQubitPoint.point); // remove old qubit plot
-        blochGroup.remove(currentQubitPoint.label); // remove old qubit label
-    }
-    currentQubitPoint = plotFromAmplitudeInputs(alphaInput.value, betaInput.value, blochGroup);
-    currentQubit.update(parseComplexNumberFromString(alphaInput.value), parseComplexNumberFromString(betaInput.value));
-}
-)
+  try {
+    currentQubitPoint = plotFromAmplitudeInputs(alphaInput, betaInput, blochGroup);
+    currentQubit = new KetQubit(parseComplexNumberFromMathInput(alphaInput), parseComplexNumberFromMathInput(betaInput));
+  } catch (e) {
+    //invalid input
+    const errorText = document.getElementById("errorMessage")!;
+    errorText.textContent = "Invalid math expression in alpha or beta.";
+  }
+});
 
 //handle click inputs
 let isDragging = false;
@@ -116,7 +129,7 @@ function updateMouseFromEvent(event: MouseEvent) {
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 }
 
-function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : HTMLInputElement, betaInput : HTMLInputElement) 
+function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : MathfieldElement, betaInput : MathfieldElement) 
 {
   let roundedTo = 5;
   let alphaReal : string = String(round(qubit.complexNumbers[0].realPart, roundedTo));

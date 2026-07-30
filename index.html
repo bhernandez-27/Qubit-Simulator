@@ -28,18 +28,19 @@
         padding: 0px;
         gap: 0px; /* automatic spacing between children — no manual top/left needed! */
     ">
-        <div id="leftHandNavigation" style="background-color: gray; width: 20%; height: 100%; overflow: auto; max-width: 80%;">
+        <div id="leftHandNavigation" style="background-color: gray; width: 23%; height: 100%; overflow: auto; max-width: 80%;">
             <div>
                 <h1 style = "color : white"> Plot a Qubit </h1>
             </div>
             <div id="plottingInput" style="z-index: 10; color: white; font-family: sans-serif">
-                <input type="text" id="alphaInput" style="width: 80px; height : 40px;" placeholder="α"> <p style="display: inline-block; font-size: 200%;">\(\vert 0 \rangle\)</p>
+                <span id="alphaInputContainer" style="display: inline-block;"></span>
+                <p style="display: inline-block; font-size: 200%;"> \(\vert0\rangle\) </p>
                 <p style="display: inline-block; font-size: 200%;"> + </p>
-                <input type="text" id="betaInput" style="width: 80px; height : 40px;" placeholder="β"> <p style="display: inline-block; font-size: 200%;">\(\vert 1 \rangle\)</p>
+                <span id="betaInputContainer" style="display: inline-block;"></span>
+                <p style="display: inline-block; font-size: 200%;">\(\vert 1 \rangle\)</p>
 
                 <br>
-                <button id="plotButton" style="width: 150px; height : 50px;">Plot</button>
-
+                <button id="plotButton" style="width: 150px; height: 50px;">Plot</button>
             </div>
 
             <p id="errorMessage"></p>

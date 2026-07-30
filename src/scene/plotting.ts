@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { makeAxesLabel } from "./axes";
-import { parseComplexNumberFromString } from "./input_parsing";
+import { parseComplexNumberFromMathInput } from "./input_parsing";
 import { KetQubit } from "../math/linear_algebra/components";
 import { convertPureStateToCartesian } from "../math/complex_valued_trig/plotting_calculations";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { MathfieldElement } from "mathlive";
 
 export function plotPoint(
     coordinates : THREE.Vector3,
@@ -44,10 +45,10 @@ export function plotQubit(qubit : KetQubit, parent : THREE.Object3D) : { point :
     return plotPsi(coordinates, parent);
 }
 
-export function plotFromAmplitudeInputs(alphaString : string, betaString : string, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
+export function plotFromAmplitudeInputs(alphaString : MathfieldElement, betaString : MathfieldElement, parent : THREE.Object3D) : { point : THREE.Mesh, label : CSS2DObject }
 {
-    const alpha = parseComplexNumberFromString(alphaString);
-    const beta = parseComplexNumberFromString(betaString);
+    const alpha = parseComplexNumberFromMathInput(alphaString);
+    const beta = parseComplexNumberFromMathInput(betaString);
 
     return plotQubit(new KetQubit(alpha, beta), parent);
 }
