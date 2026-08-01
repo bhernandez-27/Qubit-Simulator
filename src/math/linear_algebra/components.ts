@@ -1,4 +1,5 @@
 import { findTheta, findRelativePhase } from "../complex_valued_trig/qubit_phase_calculations";
+import { magnitudeSquared } from "../linear_algebra/operations";
 
 export class ComplexNumber 
 {
@@ -84,6 +85,19 @@ export class BraQubit extends Bra implements Qubit
         this.phi = findRelativePhase(alpha, beta);
         this.complexNumbers = [alpha,beta];
     }
+
+    normalize()
+    {
+        const alpha = this.complexNumbers[0];
+        const beta = this.complexNumbers[1];
+
+        const normSquared = magnitudeSquared(alpha) + magnitudeSquared(beta);
+        const norm = Math.sqrt(normSquared);
+
+        const newAlpha : ComplexNumber = new ComplexNumber(alpha.realPart/norm, alpha.imaginaryPart/norm);
+        const newBeta : ComplexNumber = new ComplexNumber(beta.realPart/norm, beta.imaginaryPart/norm);
+        this.update(newAlpha, newBeta); 
+    }
 }
 
 export class KetQubit extends Ket implements Qubit
@@ -101,6 +115,19 @@ export class KetQubit extends Ket implements Qubit
         this.theta = findTheta(alpha);
         this.phi = findRelativePhase(alpha, beta);
         this.complexNumbers = [alpha,beta];
+    }
+
+    normalize()
+    {
+        const alpha = this.complexNumbers[0];
+        const beta = this.complexNumbers[1];
+
+        const normSquared = magnitudeSquared(alpha) + magnitudeSquared(beta);
+        const norm = Math.sqrt(normSquared);
+
+        const newAlpha : ComplexNumber = new ComplexNumber(alpha.realPart/norm, alpha.imaginaryPart/norm);
+        const newBeta : ComplexNumber = new ComplexNumber(beta.realPart/norm, beta.imaginaryPart/norm);
+        this.update(newAlpha, newBeta); 
     }
 }
 

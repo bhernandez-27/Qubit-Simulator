@@ -3,6 +3,7 @@ import { KetQubit, makeQubitFromSpherical} from "../linear_algebra/components"
 
 export function convertPureStateToCartesian(qubit : KetQubit) : THREE.Vector3
 {
+    qubit.normalize();
     let r = 1;
     let theta = qubit.theta;
     let phi = qubit.phi;

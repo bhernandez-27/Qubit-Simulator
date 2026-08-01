@@ -1,4 +1,5 @@
 import { Bra, Ket } from "./components";
+import { ComplexNumber } from "./components";
 
 export function conjugateTranspose(bra: Bra) : Ket;
 export function conjugateTranspose(ket: Ket) : Bra;
@@ -23,4 +24,9 @@ export function conjugateTranspose(input_vector: Bra | Ket) : Bra | Ket
     {
         throw new Error("Input to conjugateTranspose not Bra or Ket");
     }
+}
+
+export function magnitudeSquared(complexNum : ComplexNumber) : number
+{
+    return complexNum.realPart ** 2 + complexNum.imaginaryPart ** 2;
 }

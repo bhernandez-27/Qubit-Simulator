@@ -108,6 +108,10 @@ let currentQubit = new KetQubit(new ComplexNumber(1, 0), new ComplexNumber(0,0))
 plotButton.addEventListener("click", () =>
 {
   try {
+    if (currentQubitPoint) {
+      blochGroup.remove(currentQubitPoint.point); // remove old point/label before redrawing
+      blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
+    }
     currentQubitPoint = plotFromAmplitudeInputs(alphaInput, betaInput, blochGroup);
     currentQubit = new KetQubit(parseComplexNumberFromMathInput(alphaInput), parseComplexNumberFromMathInput(betaInput));
   } catch (e) {
@@ -263,7 +267,7 @@ function updateRendererSize() {
   const scale = 1200 / width;
 
   for (const input of [alphaInput, betaInput]) {
-    input.style.width = `${150 * scale}px`;
+    input.style.width = `${220 * scale}px`;
     input.style.height = `${40 * scale}px`;
     input.style.fontSize = `${16 * scale}px`;
   }
