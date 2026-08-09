@@ -1,5 +1,5 @@
 import { findTheta, findRelativePhase } from "../complex_valued_trig/qubit_phase_calculations";
-import { magnitudeSquared } from "../linear_algebra/operations";
+import { magnitudeSquared, complexMultiply } from "./operations";
 
 export class ComplexNumber 
 {
@@ -50,6 +50,19 @@ export class Bra extends AmplitudeVector
     {
         super(complexNumbers);
     }
+
+    conjugateTranspose() : Ket
+    {
+        let complexNumbers = [];
+        for (let i = 0; i < this.length; i++)
+        {
+            complexNumbers.push(this[i]);//copy
+            complexNumbers[i].imaginaryPart *= -1;//flip sign
+        }
+
+        return new Ket(complexNumbers);
+    }
+
 }
 
 export class Ket extends AmplitudeVector 
@@ -57,6 +70,18 @@ export class Ket extends AmplitudeVector
     constructor(complexNumbers: ComplexNumber[])
     {
         super(complexNumbers);
+    }
+
+    conjugateTranspose() : Bra
+    {
+        let complexNumbers = [];
+        for (let i = 0; i < this.length; i++)
+        {
+            complexNumbers.push(this[i]);//copy
+            complexNumbers[i].imaginaryPart *= -1;//flip sign
+        }
+
+        return new Bra(complexNumbers);
     }
 }
 
@@ -98,6 +123,11 @@ export class BraQubit extends Bra implements Qubit
         const newBeta : ComplexNumber = new ComplexNumber(beta.realPart/norm, beta.imaginaryPart/norm);
         this.update(newAlpha, newBeta); 
     }
+
+    conjugateTranspose(): KetQubit {
+        const newKet = super.conjugateTranspose();
+        return new KetQubit(newKet.complexNumbers[0], newKet.complexNumbers[1]);
+    }
 }
 
 export class KetQubit extends Ket implements Qubit
@@ -110,6 +140,7 @@ export class KetQubit extends Ket implements Qubit
         this.theta = findTheta(alpha);
         this.phi = findRelativePhase(alpha, beta);
     }
+
     update(alpha : ComplexNumber, beta : ComplexNumber)
     {
         this.theta = findTheta(alpha);
@@ -129,12 +160,11 @@ export class KetQubit extends Ket implements Qubit
         const newBeta : ComplexNumber = new ComplexNumber(beta.realPart/norm, beta.imaginaryPart/norm);
         this.update(newAlpha, newBeta); 
     }
-}
 
-function complexMultiply(num1 : ComplexNumber, num2 : ComplexNumber) : ComplexNumber
-{
-    //(a+bi)(c+di) = ac + adi + bci -bd
-    return new ComplexNumber((num1.realPart * num2.realPart) - (num1.imaginaryPart * num2.imaginaryPart), (num1.realPart * num2.imaginaryPart) + (num1.imaginaryPart * num2.realPart));
+    conjugateTranspose(): BraQubit {
+        const newBra = super.conjugateTranspose();
+        return new BraQubit(newBra.complexNumbers[0], newBra.complexNumbers[1]);
+    }
 }
 
 export function makeQubitFromSpherical(theta : number, phi : number) : KetQubit

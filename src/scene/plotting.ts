@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { makeAxesLabel } from "./axes";
 import { parseComplexNumberFromMathInput } from "./input_parsing";
-import { KetQubit } from "../math/linear_algebra/components";
+import { KetQubit } from "../math/linear_algebra/state_vector_components";
 import { convertPureStateToCartesian } from "../math/complex_valued_trig/plotting_calculations";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { MathfieldElement } from "mathlive";

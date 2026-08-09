@@ -1,4 +1,4 @@
-import { ComplexNumber } from "../linear_algebra/components";
+import { ComplexNumber } from "../linear_algebra/state_vector_components";
 
 export function argument(complexNumber : ComplexNumber) : number
 {

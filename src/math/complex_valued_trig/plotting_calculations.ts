@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { KetQubit, makeQubitFromSpherical} from "../linear_algebra/components"
+import { KetQubit, makeQubitFromSpherical} from "../linear_algebra/state_vector_components"
 
 export function convertPureStateToCartesian(qubit : KetQubit) : THREE.Vector3
 {

@@ -30,7 +30,7 @@
     ">
         <div id="leftHandNavigation" style="background-color: gray; width: 23%; height: 100%; overflow: auto; max-width: 80%;">
             <div>
-                <h1 style = "color : white"> Plot a Qubit </h1>
+                <h1 style = "color : white; text-shadow : 2px 1px rgb(61, 8, 61);"> Plot a Qubit </h1>
             </div>
             <div id="plottingInput" style="z-index: 10; color: white; font-family: sans-serif">
                 <span id="alphaInputContainer" style="display: inline-block;"></span>
@@ -44,6 +44,13 @@
             </div>
 
             <p id="errorMessage"></p>
+
+
+            <div>
+                <h1 style = "color : rgb(49, 7, 49); text-shadow: 1px 1px white;">Rotate the Qubit</h1>
+                <span id="rotationContainer" style="display: inline-block;"></span>
+                <button id="rotateButton" style="width: 150px; height: 50px;">Rotate Qubit</button>
+            </div>
 
 
             <div id="ui-overlay" style="z-index: 5; color: white; font-family: sans-serif;">
