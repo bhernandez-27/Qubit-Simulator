@@ -6,11 +6,11 @@ import { plotQubit } from "./scene/plotting";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations";
 import { KetQubit, type Qubit } from "./math/linear_algebra/state_vector_components";
-import round from "./math/basic_math/round";
 import { MathfieldElement } from "mathlive";
-import { parseComplexNumberFromMathInput } from "./scene/input_parsing";
+import { parseComplexNumberFromMathInput, parseStringFromComplexNumber } from "./scene/input_parsing";
 import { rotateKetQubit } from "./math/linear_algebra/rotations";
 import { parseMatrixInput } from "./scene/input_parsing";
+import { defaultRotation } from "./math/linear_algebra/default_rotation_matrices";
 
 MathfieldElement.fontsDirectory = "/fonts"; 
 
@@ -76,50 +76,8 @@ function updateMouseFromEvent(event: MouseEvent) {
 
 function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : MathfieldElement, betaInput : MathfieldElement) 
 {
-  let roundedTo = 5;
-  let alphaReal : string = String(round(qubit.complexNumbers[0].realPart, roundedTo));
-  let alphaImaginary : string = String(round(qubit.complexNumbers[0].imaginaryPart, roundedTo));
-  let betaReal : string = String(round(qubit.complexNumbers[1].realPart, roundedTo));
-  let betaImaginary : string = String(round(qubit.complexNumbers[1].imaginaryPart, roundedTo));
-  
-  if(qubit.complexNumbers[0].imaginaryPart >= 0)
-  {
-    alphaInput.value = alphaReal + " + " + alphaImaginary +"i"
-  }
-  else
-  {
-    alphaInput.value = alphaReal + " - " + alphaImaginary.slice(1) +"i"
-  }
-
-  if(qubit.complexNumbers[1].imaginaryPart >= 0)
-  {
-    betaInput.value = betaReal + " + " + betaImaginary +"i"
-  }
-  else
-  {
-    betaInput.value = betaReal + " - " + betaImaginary.slice(1) +"i"
-  }
-
-
-  if(alphaReal == "0")
-  {
-    alphaInput.value = alphaImaginary  + "i";
-  }
-  
-  if(alphaImaginary == "0")
-  {
-    alphaInput.value = alphaReal;
-  }
-  
-  if(betaReal == "0")
-  {
-    betaInput.value =  betaImaginary + "i";
-  }
-  
-  if(betaImaginary == "0")
-  {
-    betaInput.value =  betaReal;
-  } 
+  alphaInput.value = parseStringFromComplexNumber(qubit.complexNumbers[0]);
+  betaInput.value = parseStringFromComplexNumber(qubit.complexNumbers[1]);
 }
 
 //when input is given, replot the qubit or plot it if none exists yet
@@ -177,8 +135,6 @@ document.getElementById("betaInputContainer")!.appendChild(betaInput);
 const rotationMatrixInput = new MathfieldElement();
 rotationMatrixInput.id = "rotationMatrixInput";
 document.getElementById("rotationContainer")!.appendChild(rotationMatrixInput);
-rotationMatrixInput.value = 
-rotationMatrixInput.value = 
 rotationMatrixInput.value = 
   "\\begin{pmatrix} \\placeholder[cell_0_0]{\\frac{1}{\\sqrt{2}}} & \\placeholder[cell_0_1]{\\frac{1}{\\sqrt{2}}} \\\\ \\placeholder[cell_1_0]{\\frac{1}{\\sqrt{2}}} & \\placeholder[cell_1_1]{-\\frac{1}{\\sqrt{2}}} \\end{pmatrix}";rotationMatrixInput.readOnly = true;
 
@@ -349,7 +305,37 @@ rotationButton.addEventListener("click", ()=>
     console.log(error);
   }
   
-}
-)
+})
+
+//default matrices
+const xMatrix = document.getElementById("XMatrix") as HTMLButtonElement;
+xMatrix.addEventListener("click", ()=>
+{
+  currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("x", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
+})
+
+const yMatrix = document.getElementById("YMatrix") as HTMLButtonElement;
+yMatrix.addEventListener("click", ()=>
+{
+  currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("y", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
+})
+
+const zMatrix = document.getElementById("ZMatrix") as HTMLButtonElement;
+zMatrix.addEventListener("click", ()=>
+{
+  currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("z", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
+})
+
+const hMatrix = document.getElementById("HMatrix") as HTMLButtonElement;
+hMatrix.addEventListener("click", ()=>
+{
+  currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("h", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
+})
+
+const qMatrix = document.getElementById("QMatrix") as HTMLButtonElement;
+qMatrix.addEventListener("click", ()=>
+{
+  currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("q", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
+})
 
 animate();

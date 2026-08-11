@@ -2,6 +2,8 @@ import type { MathfieldElement } from "mathlive";
 import { ComplexNumber } from "../math/linear_algebra/state_vector_components";
 import { ComputeEngine } from "@cortex-js/compute-engine";
 import { Matrix } from "../math/linear_algebra/matrices";
+import round from "../math/basic_math/round";
+
 const ce = new ComputeEngine();
 
 export function parseComplexNumberFromMathInput(input : MathfieldElement) : ComplexNumber
@@ -13,7 +15,7 @@ export function parseComplexNumberFromMathInput(input : MathfieldElement) : Comp
     return parseComplexNumberFromLatex(latex);
 }
        
-function parseComplexNumberFromLatex(latex : string) : ComplexNumber
+export function parseComplexNumberFromLatex(latex : string) : ComplexNumber
 {
     const expression = ce.parse(latex);
     const result = expression.evaluate();
@@ -35,4 +37,49 @@ export function parseMatrixInput(matrixInputField : MathfieldElement, rows : num
     );
     
     return new Matrix(matrix);
+}
+
+export function parseStringFromComplexNumber(complexNum : ComplexNumber) : string
+{
+    const roundedTo = 5;
+    const realPartString : string = String(round(complexNum.realPart, roundedTo));
+    const imaginaryPartString : string = String(round(complexNum.imaginaryPart, roundedTo));
+    let complexNumString = "";
+    let updatedImaginaryPartString = imaginaryPartString;
+    if(imaginaryPartString == "1")
+    {
+        updatedImaginaryPartString = "i";
+    } 
+    else if(imaginaryPartString == "-1")
+    {
+        updatedImaginaryPartString = "-i";
+    }
+    else
+    {
+        updatedImaginaryPartString = imaginaryPartString + "i";
+    }
+      
+    if(complexNum.imaginaryPart > 0)
+    {
+        complexNumString = realPartString + " + " + updatedImaginaryPartString;
+    }
+    if(complexNum.imaginaryPart < 0)
+    {
+        complexNumString = realPartString + " - " + updatedImaginaryPartString.slice(1);
+    }
+    if(realPartString == "0")
+    {
+        complexNumString = updatedImaginaryPartString;
+    }
+    if(imaginaryPartString == "0")
+    {
+        complexNumString = realPartString;
+    }
+    if(realPartString == "0" && imaginaryPartString == "0")
+    {
+        complexNumString = "0";
+    }
+    
+
+    return complexNumString;
 }
