@@ -26,19 +26,6 @@ export class AmplitudeVector
     {
         this.complexNumbers = complexNumbers;
         this.length = complexNumbers.length;
-
-        return new Proxy(this, 
-            {
-                get(target, prop, receiver)
-                {
-                    if (typeof prop === "string" && /^\d+$/.test(prop)) 
-                    {
-                        return target.complexNumbers[Number(prop)];  // use `target` to reach the real array
-                    }
-                    return Reflect.get(target, prop, receiver); // fallback: normal behavior, using `receiver`
-                }
-            }
-        )
     }
 
     
@@ -91,6 +78,10 @@ export interface Qubit
     length : number;
     theta : number;
     phi : number; 
+
+    update(alpha : ComplexNumber, beta : ComplexNumber) : void;
+    normalize() : void;
+    conjugateTranspose() : BraQubit | KetQubit;
 }
 
 export class BraQubit extends Bra implements Qubit

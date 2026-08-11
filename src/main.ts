@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { makeAxesLabel, makeDoubleAxisArrow } from "./scene/axes";
-import { plotFromAmplitudeInputs, plotQubit } from "./scene/plotting";
+import { plotQubit } from "./scene/plotting";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations";
-import { KetQubit, ComplexNumber, type Qubit } from "./math/linear_algebra/state_vector_components";
+import { KetQubit, type Qubit } from "./math/linear_algebra/state_vector_components";
 import round from "./math/basic_math/round";
 import { MathfieldElement } from "mathlive";
 import { parseComplexNumberFromMathInput } from "./scene/input_parsing";
@@ -13,6 +13,34 @@ import { rotateKetQubit } from "./math/linear_algebra/rotations";
 import { parseMatrixInput } from "./scene/input_parsing";
 
 MathfieldElement.fontsDirectory = "/fonts"; 
+
+//class to define a plotted qubit and its info
+class QubitPlot
+{
+  qubit : KetQubit;
+  point : THREE.Mesh;
+  label : CSS2DObject;
+  parent : THREE.Object3D;
+
+  constructor(qubit : KetQubit, parent : THREE.Object3D)
+  {
+    this.qubit = qubit;
+    const pointAndLabel = plotQubit(qubit, parent);
+    this.point = pointAndLabel.point;
+    this.label = pointAndLabel.label;
+    this.parent = parent;
+  }
+
+  update(newQubit : KetQubit)
+  {
+    this.qubit = newQubit;
+    this.parent.remove(this.point); // remove old qubit plot point
+    this.parent.remove(this.label); // remove old qubit label
+    const newPlot = plotQubit(newQubit, this.parent);
+    this.point = newPlot.point;
+    this.label = newPlot.label;
+  }
+}
 
 //functions
 function animate() {
@@ -93,6 +121,21 @@ function outputAmplitudesFromQubit(qubit : Qubit, alphaInput : MathfieldElement,
     betaInput.value =  betaReal;
   } 
 }
+
+//when input is given, replot the qubit or plot it if none exists yet
+function replotQubit(oldPlot : QubitPlot | null, newQubit : KetQubit, parent : THREE.Object3D) : QubitPlot
+{
+  if(oldPlot === null)
+  {
+    return new QubitPlot(newQubit, parent);
+  } 
+  else
+  {
+    oldPlot.update(newQubit);
+    return oldPlot;
+  }
+}
+   
 
 const container = document.getElementById("sceneContainer") as HTMLDivElement;//cointainer housing the sphere and its scene
 //resizing
@@ -217,20 +260,13 @@ scene.add(blochGroup);
 //inputs for plotting
 const plotButton = document.getElementById("plotButton") as HTMLButtonElement;
 
-let currentQubitPoint: { point: THREE.Mesh; label: CSS2DObject } | undefined = undefined;
-let currentQubit = new KetQubit(new ComplexNumber(1, 0), new ComplexNumber(0,0)); //default to |0> state
-
+let currentQubitPlot : QubitPlot | null = null;
 
 //plotting qubit from MathLive inputs
 plotButton.addEventListener("click", () =>
 {
   try {
-    if (currentQubitPoint) {
-      blochGroup.remove(currentQubitPoint.point); // remove old point/label before redrawing
-      blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
-    }
-    currentQubitPoint = plotFromAmplitudeInputs(alphaInput, betaInput, blochGroup);
-    currentQubit = new KetQubit(parseComplexNumberFromMathInput(alphaInput), parseComplexNumberFromMathInput(betaInput));
+    currentQubitPlot = replotQubit(currentQubitPlot, new KetQubit(parseComplexNumberFromMathInput(alphaInput), parseComplexNumberFromMathInput(betaInput)), blochGroup)
   } catch (e) {
     //invalid input
     errorText.textContent = "Invalid math expression in alpha or beta.";
@@ -254,15 +290,9 @@ renderer.domElement.addEventListener("pointerdown", (event) => {
   if (intersects.length > 0) {
     isDragging = true;
     controls.enabled = false; // disable OrbitControls while dragging the point, so they don't fight each other
-    if(currentQubitPoint)
-    {
-        blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
-        blochGroup.remove(currentQubitPoint.point); // remove old qubit plot
-    }
     const localPoint = blochGroup.worldToLocal(intersects[0].point.clone());
-    currentQubit = convertCartesianToPureState(localPoint);
-    currentQubitPoint = plotQubit(currentQubit, blochGroup);
-    outputAmplitudesFromQubit(currentQubit, alphaInput, betaInput);
+    currentQubitPlot = replotQubit(currentQubitPlot, convertCartesianToPureState(localPoint), blochGroup);
+    outputAmplitudesFromQubit(currentQubitPlot!.qubit, alphaInput, betaInput);
   }
 });
 
@@ -276,14 +306,8 @@ renderer.domElement.addEventListener("pointermove", (event) => {
   const intersects = raycaster.intersectObject(sphere);
   if (intersects.length > 0) {
     const localPoint = blochGroup.worldToLocal(intersects[0].point.clone());
-
-    if (currentQubitPoint) {
-      blochGroup.remove(currentQubitPoint.point); // remove old point/label before redrawing
-      blochGroup.remove(currentQubitPoint.label); // remove old qubit plot
-    }
-    currentQubit = convertCartesianToPureState(localPoint);
-    currentQubitPoint = plotQubit(currentQubit, blochGroup);
-    outputAmplitudesFromQubit(currentQubit, alphaInput, betaInput);
+    currentQubitPlot = replotQubit(currentQubitPlot, convertCartesianToPureState(localPoint), blochGroup);
+    outputAmplitudesFromQubit(currentQubitPlot!.qubit, alphaInput, betaInput);
   }
 });
 
@@ -308,19 +332,15 @@ rotationButton.addEventListener("click", ()=>
 {
   try 
   {
-    if(currentQubit === null)
+    if(currentQubitPlot === null)
     {
-      errorText.textContent = "There is no qubit to rotate";
+      errorText.textContent = "Error: You must plot a qubit first!";
     }
     else
     {
-      blochGroup.remove(currentQubitPoint!.point); // remove old point/label before redrawing
-      blochGroup.remove(currentQubitPoint!.label); // remove old qubit plot
       errorText.textContent = "";
-      currentQubit = rotateKetQubit(parseMatrixInput(rotationMatrixInput, 2, 2), currentQubit);
-
-      currentQubitPoint = plotQubit(currentQubit, blochGroup);
-      outputAmplitudesFromQubit(currentQubit, alphaInput, betaInput);
+      currentQubitPlot = replotQubit(currentQubitPlot, rotateKetQubit(parseMatrixInput(rotationMatrixInput, 2, 2), currentQubitPlot!.qubit), blochGroup);
+      outputAmplitudesFromQubit(currentQubitPlot!.qubit, alphaInput, betaInput);
     }
   } 
   catch (error)
@@ -331,6 +351,5 @@ rotationButton.addEventListener("click", ()=>
   
 }
 )
-
 
 animate();
