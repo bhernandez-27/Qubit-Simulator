@@ -73,13 +73,10 @@ export function measureQubit(ketQubit : KetQubit, measurementBasis : Measurement
     const basisQubitProjection : KetQubit = new KetQubit(complexMultiply(basisQubitProjectionScalar, measurementBasis.basisQubitKet.complexNumbers[0]), complexMultiply(basisQubitProjectionScalar, measurementBasis.basisQubitKet.complexNumbers[1]));
     const basisOrthogonalQubitProjection : KetQubit = new KetQubit(complexMultiply(basisOrthogonalQubitProjectionScalar, measurementBasis.basisOrthogonalQubitKet.complexNumbers[0]), complexMultiply(basisOrthogonalQubitProjectionScalar, measurementBasis.basisOrthogonalQubitKet.complexNumbers[1]));
     
-    console.log(basisQubitProjectionScalar);
-    console.log(basisQubitProjection);
     //using the projected state to determine probabilities
     const basisQubitProb = qubitMagnitudeSquared(basisQubitProjection);
     const basisOrthogonalQubitProb = qubitMagnitudeSquared(basisOrthogonalQubitProjection);
 
-    console.log(basisQubitProb);
     //determining the post measurement states
     const basisQubitResultPM = divideQubitByScalar(basisQubitProjection, Math.sqrt(basisQubitProb));
     const basisOrthogonalQubitResultPM = divideQubitByScalar(basisOrthogonalQubitProjection, Math.sqrt(basisOrthogonalQubitProb));

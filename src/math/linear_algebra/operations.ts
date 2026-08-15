@@ -35,13 +35,10 @@ export function multiplyMatrixKet(matrix : Matrix, ket : Ket)
     for(let i = 0; i < ket.length; i++)
     {
         currentValue = new ComplexNumber(0,0);
-        console.log("test");
         for(let j = 0; j < ket.length; j++)
         {
             currentValue = complexAdd(currentValue, complexMultiply(matrix.entries[i][j], ket.complexNumbers[j]));
         }
-        console.log("test2");
-        console.log(currentValue);
         newKetValues.push(currentValue);
     }
 

@@ -18,8 +18,8 @@ export function parseComplexNumberFromMathInput(input : MathfieldElement) : Comp
 export function parseComplexNumberFromLatex(latex : string) : ComplexNumber
 {
     const expression = ce.parse(latex);
-    const result = expression.evaluate();
-
+    const result = expression.evaluate().N();
+    
     const realPart = result.re;
     const imaginaryPart = result.im;
 

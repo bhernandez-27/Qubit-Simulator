@@ -536,3 +536,12 @@ measureButton.addEventListener("click", ()=>
 
 
 animate();
+
+//hovering over inputs for information
+alphaInput.addEventListener("mouseenter", () => {
+  alphaInput.style.borderColor = "#4a90d9";
+});
+
+alphaInput.addEventListener("mouseleave", () => {
+  alphaInput.style.borderColor = "";
+});
