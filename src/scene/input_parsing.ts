@@ -1,5 +1,5 @@
 import type { MathfieldElement } from "mathlive";
-import { ComplexNumber } from "../math/linear_algebra/state_vector_components";
+import { ComplexNumber, KetQubit } from "../math/linear_algebra/state_vector_components";
 import { ComputeEngine } from "@cortex-js/compute-engine";
 import { Matrix } from "../math/linear_algebra/matrices";
 import round from "../math/basic_math/round";
@@ -82,4 +82,10 @@ export function parseStringFromComplexNumber(complexNum : ComplexNumber) : strin
     
 
     return complexNumString;
+}
+
+
+export function parseStringFromQubit(qubit : KetQubit)
+{
+    return `${parseStringFromComplexNumber(qubit.complexNumbers[0])}\\lvert0\\rangle\ +\ ${parseStringFromComplexNumber(qubit.complexNumbers[1])}\\lvert1\\rangle`;
 }

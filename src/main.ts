@@ -5,15 +5,18 @@ import { makeAxesLabel, makeDoubleAxisArrow } from "./scene/axes";
 import { plotQubit } from "./scene/plotting";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { convertCartesianToPureState } from "./math/complex_valued_trig/plotting_calculations";
-import { KetQubit, type Qubit } from "./math/linear_algebra/state_vector_components";
+import { ComplexNumber, KetQubit, type Qubit } from "./math/linear_algebra/state_vector_components";
 import { MathfieldElement } from "mathlive";
-import { parseComplexNumberFromMathInput, parseStringFromComplexNumber } from "./scene/input_parsing";
+import { parseComplexNumberFromMathInput, parseStringFromComplexNumber, parseStringFromQubit } from "./scene/input_parsing";
 import { rotateKetQubit } from "./math/linear_algebra/rotations";
 import { parseMatrixInput } from "./scene/input_parsing";
 import { defaultRotation } from "./math/linear_algebra/default_rotation_matrices";
+import round from "./math/basic_math/round";
+import { Measurement, MeasurementBasis, measureQubit } from "./math/linear_algebra/measurements";
 
 MathfieldElement.fontsDirectory = "/fonts"; 
 
+const roundTo = 5;
 //class to define a plotted qubit and its info
 class QubitPlot
 {
@@ -21,14 +24,20 @@ class QubitPlot
   point : THREE.Mesh;
   label : CSS2DObject;
   parent : THREE.Object3D;
+  alphaOutput : MathfieldElement;
+  betaOutput : MathfieldElement;
 
-  constructor(qubit : KetQubit, parent : THREE.Object3D)
+  constructor(qubit : KetQubit, parent : THREE.Object3D, alphaOutput : MathfieldElement, betaOutput : MathfieldElement)
   {
     this.qubit = qubit;
     const pointAndLabel = plotQubit(qubit, parent);
     this.point = pointAndLabel.point;
     this.label = pointAndLabel.label;
     this.parent = parent;
+    this.alphaOutput = alphaOutput;
+    this.betaOutput = betaOutput;
+    this.alphaOutput.value = parseStringFromComplexNumber(this.qubit.complexNumbers[0]);
+    this.betaOutput.value = parseStringFromComplexNumber(this.qubit.complexNumbers[1]);
   }
 
   update(newQubit : KetQubit)
@@ -39,8 +48,12 @@ class QubitPlot
     const newPlot = plotQubit(newQubit, this.parent);
     this.point = newPlot.point;
     this.label = newPlot.label;
+    this.alphaOutput.value = parseStringFromComplexNumber(this.qubit.complexNumbers[0]);
+    this.betaOutput.value = parseStringFromComplexNumber(this.qubit.complexNumbers[1]);
   }
 }
+
+
 
 //functions
 function animate() {
@@ -61,10 +74,30 @@ function updateRendererSize() {
 
   const scale = 1200 / width;
 
-  for (const input of [alphaInput, betaInput]) {
-    input.style.width = `${220 * scale}px`;
-    input.style.height = `${40 * scale}px`;
-    input.style.fontSize = `${16 * scale}px`;
+  for (const qubitInput of [alphaInput, betaInput]) {
+    qubitInput.style.width = `${180 * scale}px`;
+    qubitInput.style.height = `${40 * scale}px`;
+    qubitInput.style.fontSize = `${16 * scale}px`;
+  }
+  for (const ket of [ketZero, ketOne])
+  {
+    ket.style.width = `${10 * scale}%`;
+    ket.style.height = `${40 * scale}px`;
+    ket.style.fontSize = `${19.80* scale}px`;
+  }
+
+  for (const measurementInput of [thetaInput, phiInput])
+  {
+    measurementInput.style.width = `${120 * scale}px`;
+    measurementInput.style.height = `${40 * scale}px`;
+    //measurementInput.style.fontSize = `${19.80* scale}px`;
+  }
+
+  for (const measurementOutput of [measurementResult, measurementDetails, measurementBasisOutput, basisQubits])
+  {
+    measurementOutput.style.width = `${50 * scale}%`;
+    measurementOutput.style.fontSize = `${120 * scale}%`;
+
   }
 }
 
@@ -85,7 +118,7 @@ function replotQubit(oldPlot : QubitPlot | null, newQubit : KetQubit, parent : T
 {
   if(oldPlot === null)
   {
-    return new QubitPlot(newQubit, parent);
+    return new QubitPlot(newQubit, parent, alphaInput, betaInput);
   } 
   else
   {
@@ -121,6 +154,21 @@ const resizeObserver = new ResizeObserver(() => {
 resizeObserver.observe(container);
 
 
+//ket zero part
+const ketZero = new MathfieldElement();
+ketZero.id = "ketZero";
+ketZero.value = "\\lvert0\\rangle";
+ketZero.readOnly = true; 
+document.getElementById("ketZero")!.appendChild(ketZero);
+
+//ket one part
+const ketOne = new MathfieldElement();
+ketOne.id = "ketOne";
+ketOne.value = "\\lvert1\\rangle";
+ketOne.readOnly = true;
+document.getElementById("ketOne")!.appendChild(ketOne);
+
+
 //define input elements
 const alphaInput = new MathfieldElement();
 alphaInput.id = "alphaInput";
@@ -137,6 +185,66 @@ rotationMatrixInput.id = "rotationMatrixInput";
 document.getElementById("rotationContainer")!.appendChild(rotationMatrixInput);
 rotationMatrixInput.value = 
   "\\begin{pmatrix} \\placeholder[cell_0_0]{\\frac{1}{\\sqrt{2}}} & \\placeholder[cell_0_1]{\\frac{1}{\\sqrt{2}}} \\\\ \\placeholder[cell_1_0]{\\frac{1}{\\sqrt{2}}} & \\placeholder[cell_1_1]{-\\frac{1}{\\sqrt{2}}} \\end{pmatrix}";rotationMatrixInput.readOnly = true;
+
+//measuring section
+const theta = new MathfieldElement();
+theta.id = "theta";
+theta.style.width = "40px";
+theta.style.height = "40px";
+theta.style.fontSize = "22px";
+theta.value = "\\theta =";
+theta.readOnly = true;
+document.getElementById("theta")!.appendChild(theta);
+
+const phi = new MathfieldElement();
+phi.id = "phi";
+phi.style.width = "40px";
+phi.style.height = "40px";
+phi.style.fontSize = "22px";
+phi.value = "\\phi =";
+phi.readOnly = true;
+document.getElementById("phi")!.appendChild(phi);
+
+
+let measurementBasis : MeasurementBasis | null = null;
+let measurement : Measurement | null = null;
+
+const measurementBasisOutput = new MathfieldElement();
+measurementBasisOutput.id = "measurementBasisOutput";
+measurementBasisOutput.value = "\\{\\lvert\\theta\\rangle\ "
++`,\\lvert\\theta^\\perp\\rangle\ \\}`
+measurementBasisOutput.readOnly = true;
+document.getElementById("measurementBasis")?.appendChild(measurementBasisOutput);
+
+const basisQubits = new MathfieldElement();
+basisQubits.id = "basisQubits";
+basisQubits.readOnly = true;
+basisQubits.style.display = "none";
+document.getElementById("basisQubits")!.appendChild(basisQubits);
+
+
+const measurementResult = new MathfieldElement();
+measurementResult.id = "measurementResult";
+measurementResult.readOnly = true;
+measurementResult.style.display = "none";
+document.getElementById("measurementResult")!.appendChild(measurementResult);
+
+const measurementDetails = new MathfieldElement();
+measurementDetails.id = "measurementResult";
+measurementDetails.readOnly = true;
+measurementDetails.style.display = "none";
+document.getElementById("measurementDetails")!.appendChild(measurementDetails);
+
+const thetaInput = new MathfieldElement();
+thetaInput.id = "thetaInput";
+thetaInput.value = "0";
+document.getElementById("thetaContainer")!.appendChild(thetaInput);
+
+const phiInput = new MathfieldElement();
+phiInput.id = "phiInput";
+phiInput.value = "0";
+document.getElementById("phiContainer")!.appendChild(phiInput);
+
 
 //adjustable sphere cosmetics for how dense the sphere is
 let sphereSegments = 13;
@@ -337,5 +445,82 @@ qMatrix.addEventListener("click", ()=>
 {
   currentQubitPlot = replotQubit(currentQubitPlot, defaultRotation("q", currentQubitPlot!.qubit, rotationMatrixInput), blochGroup);
 })
+
+
+//measurements
+const measureButton = document.getElementById("measureButton") as HTMLButtonElement;
+measureButton.addEventListener("click", ()=>
+{
+  const parsedTheta : ComplexNumber = parseComplexNumberFromMathInput(thetaInput);
+  const parsedPhi : ComplexNumber = parseComplexNumberFromMathInput(phiInput);
+  if(parsedTheta.imaginaryPart != 0 || parsedPhi.imaginaryPart != 0)
+  {
+    errorText.textContent = "Error: Theta and Phi must be real numbers!"
+    return;
+  }
+  if(currentQubitPlot === null)
+  {
+    errorText.textContent = "Error: There must be a qubit plotted first!"
+    return;
+  }
+  errorText.textContent = "";
+  measurementBasis = new MeasurementBasis(parsedTheta.realPart, parsedPhi.realPart);
+
+  measurement = measureQubit(currentQubitPlot!.qubit, measurementBasis);
+
+  document.getElementById("measurementResultHeader")!.style.display = "block";//display header
+
+  let measuredLatex = null;
+  if(measurement.measuredQubit == "theta")
+  {
+    measuredLatex = "\\theta";
+  }
+  else
+  {
+    measuredLatex = "\\theta^\\perp";
+  }
+  
+  measurementResult.value = `\\displaylines{\\text{Measurement Applied: }\\lvert${measuredLatex}\\rangle\\langle${measuredLatex}\\rvert\\\\`
+  +`\\text{Measured State: }\\\\`
+  +`\\lvert\\psi^{(${measuredLatex})}\\rangle\ =\ ${parseStringFromQubit(measurement.postMeasurementState)}}`
+ 
+  measurementDetails.value = `\\displaylines{\\text{Measurement Details:}\\\\`
+  +`\\lvert\\theta\\rangle\\langle\\theta\\rvert \\lvert\\psi\\rangle\ =\ ${parseStringFromQubit(measurement.basisQubitProjection)}\\\\`
+  +`\\lvert\\theta^\\perp\\rangle\\langle\\theta^\\perp\\rvert \\lvert\\psi\\rangle\ =\ ${parseStringFromQubit(measurement.basisOrthogonalQubitProjection)}\\\\`
+  +`p(\\theta)\ =\ ${round(measurement.basisQubitProb, roundTo)}\\\\`
+  +`p(\\theta^\\perp)\ =\ ${round(measurement.basisOrthogonalQubitProb, roundTo)}\\\\`
+  +`\\lvert\\psi^{(\\theta)}\\rangle\ =\ ${parseStringFromQubit(measurement.basisQubitPM)}\\\\`
+  +`\\lvert\\psi^{(\\theta^\\perp)}\\rangle\ =\ ${parseStringFromQubit(measurement.basisOrthogonalQubitPM)}\\\\`
+  +`}`;
+  measurementResult.style.display = "block";
+  measurementDetails.style.display = "block";
+
+  measurementBasisOutput.value = "\\{\\lvert\\theta\\rangle\ "
+  +`=\ ${parseStringFromComplexNumber(measurementBasis.basisQubitKet.complexNumbers[0])}\\lvert0\\rangle\ +\ `
+  +`${parseStringFromComplexNumber(measurementBasis.basisQubitKet.complexNumbers[1])}\\lvert1\\rangle,\ `
+  +`\\lvert\\theta^\\perp\\rangle\ =\ `
+  +`${parseStringFromComplexNumber(measurementBasis.basisOrthogonalQubitKet.complexNumbers[0])}\\lvert0\\rangle\ +\ `
+  +`${parseStringFromComplexNumber(measurementBasis.basisOrthogonalQubitKet.complexNumbers[1])}\\lvert1\\rangle\\}`
+  measurementBasisOutput.style.display = "block";
+
+  basisQubits.value = "\\begin{aligned}"
+  +"\\lvert\\theta\\rangle\ &=\ \\cos(\\frac{\\theta}{2})\\lvert0\\rangle\ + \ e^{i\\phi}\\sin(\\frac{\\theta}{2})\\lvert1\\rangle"
+  +"\\\\"
+  +`&=\ \\cos(\\frac{${round(measurementBasis.theta, roundTo)}}{2})\\lvert0\\rangle\ + \ e^{i\\cdot${round(measurementBasis.phi, roundTo)}}\\sin(\\frac{${round(measurementBasis.theta, roundTo)}}{2})\\lvert1\\rangle`
+  +"\\\\"+
+  `&=\ ${parseStringFromComplexNumber(measurementBasis.basisQubitKet.complexNumbers[0])}\\lvert0\\rangle\ +\ ${parseStringFromComplexNumber(measurementBasis.basisQubitKet.complexNumbers[1])}\\lvert1\\rangle`
+  +"\\\\"+
+  `\\lvert\\theta^\\perp\\rangle\ &=\ \\cos(\\frac{\\theta^\\perp}{2})\\lvert0\\rangle\ + \ e^{i\\phi}\\sin(\\frac{\\theta^\\perp}{2})\\lvert1\\rangle`
+  +"\\\\"+
+  `&=\ \\cos(\\frac{${round(measurementBasis.thetaPerp, roundTo)}}{2})\\lvert0\\rangle\ + \ e^{i\\cdot${round(measurementBasis.phi, roundTo)}}\\sin(\\frac{${round(measurementBasis.thetaPerp, roundTo)}}{2})\\lvert1\\rangle`
+  +"\\\\"+
+  `&=\ ${parseStringFromComplexNumber(measurementBasis.basisOrthogonalQubitKet.complexNumbers[0])}\\lvert0\\rangle\ +\ ${parseStringFromComplexNumber(measurementBasis.basisOrthogonalQubitKet.complexNumbers[1])}\\lvert1\\rangle`
+  +"\\end{aligned}";
+
+  basisQubits.style.display = "block";
+
+  currentQubitPlot.update(measurement.postMeasurementState);
+})
+
 
 animate();
