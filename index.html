@@ -32,11 +32,14 @@
             <div>
                 <h1 style = "color : white; text-shadow : 2px 1px rgb(61, 8, 61);"> Plot a Qubit </h1>
             </div>
-            <div id="plottingInput" style="color: white; font-family: sans-serif">
-                <span id="alphaInputContainer"></span> <span id = "ketZero"></span>
+            <div id="plottingInput" style="color: white; font-family: sans-serif;">
+                <div style="display: flex; align-items: center;">
+                    <span id="alphaInputContainer"></span><span id = "ketZero"></span>
+                </div>
                 <p style="font-size: 200%; margin : 10px; padding : 0"> + </p>
-                <span id="betaInputContainer"></span> <span id = "ketOne"></span>
-                <br>
+                <div style="display: flex; align-items: center;">
+                    <span id="betaInputContainer"></span><span id = "ketOne"></span>
+                </div>
                 <button id="plotButton" style="width: 150px; height: 50px;">Plot</button>
             </div>
 
@@ -63,12 +66,16 @@
 
             <div id = "measuringDiv">
                 <h1 style = "color : rgb(25, 72, 12); text-shadow: 1px 1px rgb(40, 55, 218);">Measure the Qubit</h1>
-                <span id="theta" style="display: inline-block;"></span>
-                <span id="thetaContainer" style="display: inline-block;"></span>
+                <div style="display: flex; align-items: center;">
+                    <span id="theta" style="display: inline-block;"></span>
+                    <span id="thetaContainer" style="display: inline-block;"></span>
+                </div>
 
-                <span id="phi" style="display: inline-block;"></span>
-                <span id="phiContainer" style="display: inline-block;"></span>
-                <br>
+                <div style="display: flex; align-items: center;">
+                    <span id="phi" style="display: inline-block;"></span>
+                    <span id="phiContainer" style="display: inline-block;"></span>
+                </div>
+                    <br>
                 <button id="measureButton" style="width: 150px; height: 50px;">Measure Qubit</button>
                 <h2 id="measurementResultHeader" style = "padding : 1%; margin : 1%; display: none;">Measurement Result:</h2>
                 <span id="measurementResult"></span>

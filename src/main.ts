@@ -63,6 +63,23 @@ function animate() {
     labelRenderer.render(scene, camera);
 }
 
+const SCALE_REFERENCE_WIDTH = 1200;
+
+interface ScalableGroup {
+  elements: HTMLElement[];
+  width: number;
+  height: number;
+  fontSize: number;
+}
+
+function applyScale(group: ScalableGroup, scale: number) {
+  for (const el of group.elements) {
+    el.style.width = `${group.width * scale}px`;
+    el.style.height = `${group.height * scale}px`;
+    el.style.fontSize = `${group.fontSize * scale}px`;
+  }
+}
+
 function updateRendererSize() {
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -72,32 +89,27 @@ function updateRendererSize() {
   renderer.setSize(width, height);
   labelRenderer.setSize(width, height);
 
-  const scale = 1200 / width;
+  const scale = SCALE_REFERENCE_WIDTH / width;
 
-  for (const qubitInput of [alphaInput, betaInput]) {
-    qubitInput.style.width = `${180 * scale}px`;
-    qubitInput.style.height = `${40 * scale}px`;
-    qubitInput.style.fontSize = `${16 * scale}px`;
-  }
-  for (const ket of [ketZero, ketOne])
-  {
-    ket.style.width = `${10 * scale}%`;
-    ket.style.height = `${40 * scale}px`;
-    ket.style.fontSize = `${19.80* scale}px`;
-  }
+  const scalableGroups: ScalableGroup[] = [
+    { elements: [alphaInput, betaInput], width: 180, height: 50, fontSize: 18 },
+    { elements: [ketZero, ketOne], width: 40, height: 50, fontSize: 19.8 },
+    { elements: [theta, phi], width: 40, height: 40, fontSize: 19.8 },
+    { elements: [plotButton], width: 224, height: 40, fontSize: 19.8 },
+    { elements: [measureButton], width: 200, height: 40, fontSize: 19.8 },
+    { elements: [thetaInput, phiInput], width: 156, height: 40, fontSize: 19.8 },
+    { elements: [measurementResult], width: 325, height: 110, fontSize: 19.2 },
+    { elements: [measurementDetails], width: 325, height: 220, fontSize: 19.2 },
+    { elements: [measurementBasisOutput], width: 325, height: 40, fontSize: 19.2 },
+    { elements: [basisQubits], width: 325, height: 240, fontSize: 19.2 },
+    { elements: [rotationMatrixInput], width: 200, height: 100, fontSize: 18 },
+    { elements: [rotationButton], width: 202, height : 40, fontSize : 18 },
+    { elements: [xMatrix, yMatrix, zMatrix, hMatrix, qMatrix], width: 60, height: 30, fontSize: 14 },
+  ];
 
-  for (const measurementInput of [thetaInput, phiInput])
-  {
-    measurementInput.style.width = `${120 * scale}px`;
-    measurementInput.style.height = `${40 * scale}px`;
-    //measurementInput.style.fontSize = `${19.80* scale}px`;
-  }
-
-  for (const measurementOutput of [measurementResult, measurementDetails, measurementBasisOutput, basisQubits])
-  {
-    measurementOutput.style.width = `${50 * scale}%`;
-    measurementOutput.style.fontSize = `${120 * scale}%`;
-
+  
+  for (const group of scalableGroups) {
+    applyScale(group, scale);
   }
 }
 
