@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1784080507.19414 "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" "journey.pdf" "journey" 1784080507.43436 0
-  "/Users/brianhernandez/A_Trip_On_The_Bloch_Sphere/journey.tex" 1784080506.73357 2288 a1f808aeb930584cb58ec1113bb450a9 ""
+["pdflatex"] 1786834058.02644 "/Users/brianhernandez/Qubit-Simulator/journey.tex" "journey.pdf" "journey" 1786834058.28799 0
+  "/Users/brianhernandez/Qubit-Simulator/journey.tex" 1786834057.86267 2716 636ebbe6c29976029dbc8e4cf6c99bfb ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -27,13 +27,18 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls" 1748806692 20144 b966087dda3b194755eb460d32e2ef75 ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo" 1748806692 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty" 1748806692 2671 d9941f4bf4750e9b0603c9a2ec54693b ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1761248321 30662 bfd6e864f4ffc5018b0e2b6260c3181c ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg" 1763671178 1865 73df61e45e2dfdc239ef37ab16d87d6a ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty" 1763671178 81627 6a9c17f89f356724d1c9813b7025f0c1 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty" 1763671178 77105 002e983b638eadbf04e580642335f689 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty" 1710360531 353 9024412f43e92cd5b21fe9ded82d0610 ""
   "/usr/local/texlive/2026/texmf-dist/web2c/texmf.cnf" 1770478701 43630 e9fa012910491fe5ae08a72c3c2997a7 ""
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1781735401 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "journey.aux" 1784080507.41108 363 78b0435f3c9fbc5bd850207b1d62bc04 "pdflatex"
-  "journey.tex" 1784080506.73357 2288 a1f808aeb930584cb58ec1113bb450a9 ""
+  "journey.aux" 1786834058.26413 465 96b6036d8d99fc35fbfac7007e9b4035 "pdflatex"
+  "journey.tex" 1786834057.86267 2716 636ebbe6c29976029dbc8e4cf6c99bfb ""
   (generated)
   "journey.aux"
   "journey.log"

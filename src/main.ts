@@ -56,6 +56,50 @@ class QubitPlot
 
 
 //functions
+function attachTooltip(element: HTMLElement, latex: string, delayMs = 200) {
+  let toolTipElement: HTMLDivElement | null = null;
+  let showTimeout: number | undefined;
+
+  element.addEventListener("mouseenter", () => {
+    showTimeout = window.setTimeout(() => {
+      toolTipElement = document.createElement("div");
+      toolTipElement.style.position = "fixed";
+      toolTipElement.style.background = "#222";
+      toolTipElement.style.padding = "6px 10px";
+      toolTipElement.style.borderRadius = "4px";
+      toolTipElement.style.pointerEvents = "none";
+      toolTipElement.style.zIndex = "1000";
+
+      const mathField = new MathfieldElement();
+      mathField.value = latex;
+      mathField.readOnly = true;
+      mathField.style.border = "none";
+      mathField.style.background = "transparent";
+      mathField.style.color = "white";
+      mathField.style.fontSize = "16px";
+      toolTipElement.appendChild(mathField);
+
+      element.style.borderColor = "#3c0c57";
+      element.style.borderWidth = "4px";
+      element.style.borderStyle = "solid";
+      document.body.appendChild(toolTipElement);
+
+      const rect = element.getBoundingClientRect();
+      toolTipElement.style.left = `${rect.left + rect.width / 2}px`;
+      toolTipElement.style.top = `${rect.bottom + 8}px`;
+    }, delayMs);
+  });
+
+  element.addEventListener("mouseleave", () => {
+    clearTimeout(showTimeout);
+    toolTipElement?.remove();
+    toolTipElement = null;
+    element.style.borderColor = "";
+    element.style.borderWidth = "";
+    element.style.borderStyle = "";
+  });
+}
+
 function animate() {
    requestAnimationFrame(animate);
     controls.update();
@@ -536,12 +580,98 @@ measureButton.addEventListener("click", ()=>
 
 
 animate();
-
 //hovering over inputs for information
-alphaInput.addEventListener("mouseenter", () => {
-  alphaInput.style.borderColor = "#4a90d9";
-});
+attachTooltip(alphaInput, "\\displaylines{\\text{This is alpha. It is the } \\alpha \\text{ in } \\alpha\\lvert0\\rangle\ +\ \\beta\\lvert1\\rangle"
+  +"\\\\"
+  +"\\text{It is the probability amplitude of the }\\lvert0\\rangle \\text{ state.}\\\\"
+  +"\\text{Squaring it gives the probability of seeing the } \\lvert0\\rangle \\text{ state after a measurement in the computational basis } \\{\\lvert0\\rangle, \\lvert1\\rangle\\}\\\\"
+  +"p(0)\ =\ \\alpha^2}");
+attachTooltip(betaInput, "\\displaylines{\\text{This is beta. It is the } \\beta \\text{ in } \\alpha\\lvert0\\rangle\ +\ \\beta\\lvert1\\rangle"
+  +"\\\\"
+  +"\\text{It is the probability amplitude of the }\\lvert1\\rangle \\text{ state.}\\\\"
+  +"\\text{Squaring it gives the probability of seeing the } \\lvert1\\rangle \\text{ state after a measurement in the computational basis } \\{\\lvert0\\rangle, \\lvert1\\rangle\\}\\\\"
+  +"p(1)\ =\ \\beta^2}");
 
-alphaInput.addEventListener("mouseleave", () => {
-  alphaInput.style.borderColor = "";
-});
+attachTooltip(rotationMatrixInput, "\\displaylines{\\text{This is the matrix form of}\\\\"
+  +"R_{\\hat{n}}(\\xi) \\equiv e^{-i\\frac{\\xi}{2}\\hat{n}\\cdot\\vec{\\sigma}}"
+  +"\\\\"
+  +"=\\ \\cos\\left(\\frac{\\xi}{2}\\right)I\\ -\\ i\\sin\\left(\\frac{\\xi}{2}\\right)(n_xX\\ +\\ n_yY\\ +\\ n_zZ)"
+  +"\\\\"
+  +"\\text{where }\\hat{n} = (n_x, n_y, n_z)\\text{ is the axis and }\\xi\\text{ is the angle of rotation.}"
+  +"}");
+
+
+attachTooltip(xMatrix, "\\displaylines{"
+  +"\\text{Pauli X Gate (Bit Flip)}"
+  +"\\\\"
+  +"X = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}"
+  +"\\\\"
+  +"\\text{Swaps the amplitudes: }"
+  +"\\\\X\\lvert0\\rangle = \\lvert1\\rangle\\\\"
+  +"X\\lvert1\\rangle = \\lvert0\\rangle"
+  +"}");
+
+attachTooltip(yMatrix,
+  "\\displaylines{"
+  +"\\text{Pauli Y Gate (Bit-Phase Flip)}"
+  +"\\\\"
+  +"Y = \\begin{pmatrix} 0 & -i \\\\ i & 0 \\end{pmatrix}"
+  +"\\\\"
+  +"\\text{Flips the Bit and the Phase: }\\\\"
+  +"Y\\lvert0\\rangle\ =\ i\\lvert1\\rangle\ =\ \\lvert1\\rangle"
+  +"\\\\"
+  +"Y\\lvert1\\rangle\ =\ -i\\lvert0\\rangle\ =\ -\\lvert0\\rangle"
+  +"}"
+);
+
+attachTooltip(zMatrix,
+  "\\displaylines{"
+  +"\\text{Pauli Z Gate (Phase Flip)}"
+  +"\\\\"
+  +"Z = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}"
+  +"\\\\"
+  +"\\text{Flips the Phase}\\\\"
+  +"Z\\lvert0\\rangle\ =\ \\lvert0\\rangle"
+  +"\\\\"
+  +"Z\\lvert1\\rangle\ =\ -\\lvert1\\rangle"
+  +"}"
+);
+
+attachTooltip(hMatrix,
+  "\\displaylines{"
+  +"\\text{Hadamard Gate}"
+  +"\\\\"
+  +"H = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 & 1 \\\\ 1 & -1 \\end{pmatrix}"
+  +"\\\\"
+  +"\\text{Creates an equal superposition of }\\lvert0\\rangle\\text{ and }\\lvert1\\rangle\\\\"
+  +"H\\lvert0\\rangle\ =\ \\lvert+\\rangle = \\frac{1}{\\sqrt{2}}\\lvert0\\rangle\ +\ \\frac{1}{\\sqrt{2}}\\lvert1\\rangle"
+  +"\\\\"
+  +"H\\lvert1\\rangle\ =\ \\lvert-\\rangle\ =\ \\frac{1}{\\sqrt{2}}\\lvert0\\rangle\ -\ \\frac{1}{\\sqrt{2}}\\lvert1\\rangle"
+  +"}"
+);
+
+
+attachTooltip(qMatrix,
+  "\\displaylines{"
+  +"\\text{Quarter Wave Plate (}\\lvert0\\rangle\\text{ Delayer)}"
+  +"\\\\"
+  +"Q = \\begin{pmatrix} i & 0 \\\\ 0 & 1 \\end{pmatrix}"
+  +"\\\\"
+  +"\\text{Applies a quarter-wavelength phase delay to }\\lvert0\\rangle\\\\"
+  +"Q\\lvert0\\rangle\ =\ i\\lvert0\\rangle"
+  +"\\\\"
+  +"Qi\\lvert0\\rangle\ =\ -1\\lvert0\\rangle"
+  +"\\\\"
+  +"Q(-1\\lvert0\\rangle\) =\ -i\\lvert0\\rangle"
+  +"\\\\"
+  +"Q(-i\\lvert1\\rangle\) =\ \\lvert1\\rangle"
+  +"}"
+);
+
+
+attachTooltip(thetaInput, "\\displaylines{\\text{This is theta.}\\\\"
+  +"\\text{It is the }\\theta \\text{ in } \\lvert\\theta\\rangle\ =\ \\cos(\\frac{\\theta}{2})\\lvert0\\rangle\ +\ e^{i\\phi}\\sin(\\frac{\\theta}{2})\\lvert1\\rangle}");
+
+
+attachTooltip(phiInput, "\\displaylines{\\text{This is phi.}\\\\"
+  +"\\text{It is the }\\phi \\text{ in } \\lvert\\theta\\rangle\ =\ \\cos(\\frac{\\theta}{2})\\lvert0\\rangle\ +\ e^{i\\phi}\\sin(\\frac{\\theta}{2})\\lvert1\\rangle}");

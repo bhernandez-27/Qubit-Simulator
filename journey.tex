@@ -1,8 +1,10 @@
 \documentclass{article}
+\usepackage{listings}
+
 
 \title{The Journey of Building
 
-"A Trip On The Bloch Sphere"}
+\underline{Qubit Simulator}}
 \author{Brian Hernandez}
 \date{Latest Update: June 17, 2026}
 
@@ -12,16 +14,20 @@
 
 \section{Introduction}
 
-This document chronicles my journey in creating \textbf{A Trip on The Bloch Sphere}. It captures my thought process, all my fails, successes, and ideas for the future to come. 
+This document chronicles my journey in creating \textbf{Qubit Simulator}. It captures my thought process, all my fails, successes, and ideas for the future to come. 
 
-\section{The Math}
+\section{The Language}
 
 Since finding the probability amplitudes of a qubit without explicit calculation is impossible, it is necessary to use matrix multiplication to find the state after each operation applied. While I could use Python or a library that already implements matrix multiplication, what's the fun in that?\newline{}
-So the first step is to make a library that implements matrix multiplication, and what better language to do it in than C? It's fast, simple, and straightforward. It has all I need: no more, no less.
+So the first step is to make a library that implements matrix multiplication, and what better language to do it in than C\@
+It's fast, simple, and straightforward. It has all I need: no more, no less\dots
+Or so I thought. I realized shortly after writing my first few classes that using Webassembly would be too tedious and using hhtp server communication would over-complicate this app for no reason. 
+So I did what I least wanted to do: I scrapped using C and resorted to writing everything in Typescript instead.
+
+
+\section{The Clases}
+So with the language choice out of the way, we can start implementing some linear algebra: The first step is to use a class to implement complex numbers. It simply has to have a real part and imaginary part:
 \\
-The first step is to use a struct to implement complex numbers. It simply has to have a real part and imaginary part.
-\\
-Now for the 
 
 \subsection{Converting Vector to Spherical Coordinates}
 We can represent any qubit on the Bloch Sphere using the spherical coordinates $(\theta ,\phi , r)$. Since $\vert \alpha^2 \vert + \vert \beta^2 \vert = 1$, r is always 1 and so for any pure state qubit, the resulting coordinate will always be on the surface of the Bloch Sphere.
