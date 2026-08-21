@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{export}\PYG{+w}{ }\PYG{k+kd}{class}\PYG{+w}{ }\PYG{n+nx}{AmplitudeVector}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nx}{complexNumbers}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{ComplexNumber}\PYG{p}{[];}
+\PYG{+w}{    }\PYG{n+nx}{length}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k+kr}{constructor}\PYG{p}{(}\PYG{n+nx}{complexNumbers}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{ComplexNumber}\PYG{p}{[])}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n+nx}{complexNumbers}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{complexNumbers}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{this}\PYG{p}{.}\PYG{n+nx}{length}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{complexNumbers}\PYG{p}{.}\PYG{n+nx}{length}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

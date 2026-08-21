@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{+w}{    }\PYG{k}{export}\PYG{+w}{ }\PYG{k+kd}{class}\PYG{+w}{ }\PYG{n+nx}{ComplexNumber}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{realPart}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{imaginaryPart}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kr}{constructor}\PYG{p}{(}\PYG{n+nx}{realPart}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{imaginaryPart}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{number}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{this}\PYG{p}{.}\PYG{n+nx}{realPart}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{realPart}\PYG{p}{;}
+\PYG{+w}{            }\PYG{k}{this}\PYG{p}{.}\PYG{n+nx}{imaginaryPart}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{imaginaryPart}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}
