@@ -4,7 +4,7 @@ This is an educative resource intende to help users better understand how qubits
 
 The app can be accessed through Vite using `npm run dev` or on the website hosted on Github Pages: https://bhernandez-27.github.io/Qubit-Simulator/
 
-A log of the journey in building this app can be found in journey.pdf
+A log of the journey in building this app can be found in [journey.tex](./journey.tex).
 
 Credits: 
 The logic for this app was based off of the knowledge I gained in Introduction to Quantum Computing (PHYS 33500) at CCNY with Professor Seth Cottrell and subsequentially his book 
